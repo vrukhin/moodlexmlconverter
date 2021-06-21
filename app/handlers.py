@@ -124,6 +124,42 @@ def numerical_handler(tree, query, question_number):
 
 
 def essay_handler(tree, query, question_number):
+    query_text = query.pop(0) # извлекаем текст вопроса
+
+    # получаем корень дерева
+    root = tree.getroot() 
+
+    # добавляем дочерний элемент "question"
+    question = ET.SubElement(root, "question", {"type":"essay"})
+
+    # название и текст вопроса
+    name = ET.SubElement(question, "name")
+    name_text = ET.SubElement(name, "text")
+    name_text.text = "q{}".format(question_number)
+    questiontext = ET.SubElement(question, "questiontext", {"format":"markdown"})
+    questiontext_text = ET.SubElement(questiontext, "text")
+    questiontext_text.text = query_text
+
+    # формат ответа
+    responseformat = ET.SubElement(question, "responseformat")
+    responseformat.text = "monospaced"
+
+    # заполнение поля ответа обязательно
+    responserequired = ET.SubElement(question, "responserequired")
+    responserequired.text = "1"
+
+    # размер поля ответа
+    responsefieldlines = ET.SubElement(question, "responsefieldlines")
+    responsefieldlines.text = "15"
+
+    # разрешить/запретить вложения
+    attachments = ET.SubElement(question, "attachments")
+    attachments.text = "0"
+
+    # (не)требовать вложения
+    attachmentsrequired = ET.SubElement(question, "attachmentsrequired")
+    attachmentsrequired.text = "0"
+
     root = tree.getroot()
     tree = ET.ElementTree(root)
     return tree

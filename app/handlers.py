@@ -112,7 +112,29 @@ def matching_handler(tree, query, question_number):
 
 
 def shortanswer_handler(tree, query, question_number):
-    root = tree.getroot()
+
+    query_text = query.pop(0) # извлекаем текст вопроса
+
+    # получаем корень дерева
+    root = tree.getroot() 
+
+    # добавляем дочерний элемент "question"
+    question = ET.SubElement(root, "question", {"type":"shortanswer"})
+
+    # название и текст вопроса
+    name = ET.SubElement(question, "name")
+    name_text = ET.SubElement(name, "text")
+    name_text.text = "q{}".format(question_number)
+    questiontext = ET.SubElement(question, "questiontext", {"format":"markdown"})
+    questiontext_text = ET.SubElement(questiontext, "text")
+    questiontext_text.text = query_text
+
+    # ответы
+    for ans in query:
+        answer = ET.SubElement(question, "answer", {"fraction":"100", "format":"moodle_auto_format"})
+        answer_text = ET.SubElement(answer, "text")
+        answer_text.text = ans
+
     tree = ET.ElementTree(root)
     return tree
 

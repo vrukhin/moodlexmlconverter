@@ -1,3 +1,5 @@
+import os
+from glob import glob
 import xml.etree.ElementTree as ET
 from handlers import multichoice_handler, truefalse_handler, matching_handler, shortanswer_handler, numerical_handler, essay_handler
 
@@ -29,15 +31,16 @@ def read_quiz(data):
     return questions # //TODO: Сделать проверку на наличие "пустых" вопросов
 
 
-handlers = dict()
-handlers["multichoiсe"] = multichoice_handler
-handlers["truefalse"] = truefalse_handler
-handlers["matching"] = matching_handler
-handlers["shortanswer"] = shortanswer_handler
-handlers["numerical"] = numerical_handler
-handlers["essay"] = essay_handler
+def search_files():
+    """Ищет файлы формата .md в папке data
+    Returns:
+        files (list): список найденных файлов
+    """
+    files = [y for x in os.walk('./data/') for y in glob(os.path.join(x[0], '*.md'))]
+    return files
 
-def main(data):
+
+def convert_to_xml(data):
     tree = ET.ElementTree(ET.Element("quiz")) # создаем дерево с корневым элементом "quiz"
     questions = read_quiz(data) # считываем вопросы из текстового файла
 
@@ -48,7 +51,22 @@ def main(data):
         question_number += 1
         tree = handlers[question.pop(0)](tree, question, question_number)
 
-    tree.write('./app/example.xml', encoding='utf-8')
+    return tree
 
 
-main('./app/example.md')
+def main(files):
+    for f in files:
+        convert_to_xml(f).write(f[:-2]+'xml', encoding='utf-8')
+
+
+handlers = dict()
+handlers["multichoiсe"] = multichoice_handler
+handlers["truefalse"] = truefalse_handler
+handlers["matching"] = matching_handler
+handlers["shortanswer"] = shortanswer_handler
+handlers["numerical"] = numerical_handler
+handlers["essay"] = essay_handler
+
+files = search_files()
+
+main(files)

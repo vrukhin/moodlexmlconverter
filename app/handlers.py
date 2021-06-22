@@ -100,7 +100,34 @@ def multichoice_handler(tree, query, question_number):
 
 
 def truefalse_handler(tree, query, question_number):
-    root = tree.getroot()
+    
+    query_text = query.pop(0) # извлекаем текст вопроса
+
+    # получаем корень дерева
+    root = tree.getroot() 
+
+    # добавляем дочерний элемент "question"
+    question = ET.SubElement(root, "question", {"type":"truefalse"})
+
+    # название и текст вопроса
+    name = ET.SubElement(question, "name")
+    name_text = ET.SubElement(name, "text")
+    name_text.text = "q{}".format(question_number)
+    questiontext = ET.SubElement(question, "questiontext", {"format":"markdown"})
+    questiontext_text = ET.SubElement(questiontext, "text")
+    questiontext_text.text = query_text
+
+    # ответы
+    correct_answer = query.pop(0).lower()
+
+    answer_true = ET.SubElement(question, "answer", {"fraction":"100", "format":"moodle_auto_format"})
+    answer_true_text = ET.SubElement(answer_true, "text")
+    answer_true_text.text = "true" if correct_answer == "верно" else "false"
+
+    answer_false = ET.SubElement(question, "answer", {"fraction":"0", "format":"moodle_auto_format"})
+    answer_false_text = ET.SubElement(answer_false, "text")
+    answer_false_text.text = "false" if correct_answer == "верно" else "true"
+
     tree = ET.ElementTree(root)
     return tree
 

@@ -133,7 +133,68 @@ def truefalse_handler(tree, query, question_number):
 
 
 def matching_handler(tree, query, question_number):
-    root = tree.getroot()
+
+    query_text = query.pop(0) # извлекаем текст вопроса
+
+    # получаем корень дерева
+    root = tree.getroot() 
+
+    # добавляем дочерний элемент "question"
+    question = ET.SubElement(root, "question", {"type":"matching"})
+
+    # название и текст вопроса
+    name = ET.SubElement(question, "name")
+    name_text = ET.SubElement(name, "text")
+    name_text.text = "q{}".format(question_number)
+    questiontext = ET.SubElement(question, "questiontext", {"format":"markdown"})
+    questiontext_text = ET.SubElement(questiontext, "text")
+    questiontext_text.text = query_text
+
+    # id - вопроса
+    idnumber = ET.SubElement(question, 'idnumber')
+    idnumber.text = "q{}".format(question_number)
+
+    # случайный порядок ответов
+    shuffleanswers = ET.SubElement(question, 'shuffleanswers')
+    shuffleanswers.text = 'true'
+
+    # показать стандартные инструкции 
+    showstandardinstruction = ET.SubElement(question, 'showstandardinstruction')
+    showstandardinstruction.text = '0'
+
+    # отзывы на ответы
+    correctfeedback = ET.SubElement(question, 'correctfeedback', {'format':'html'})
+    text = ET.SubElement(correctfeedback, 'text')
+    text.text = 'Ваш ответ верный.'
+
+    partiallycorrectfeedback = ET.SubElement(question, 'partiallycorrectfeedback', {'format':'html'})
+    text = ET.SubElement(partiallycorrectfeedback, 'text')
+    text.text = 'Ваш ответ частично правильный.'
+
+    incorrectfeedback = ET.SubElement(question, 'incorrectfeedback', {'format':'html'})
+    text = ET.SubElement(incorrectfeedback, 'text')
+    text.text = 'Ваш ответ неправильный.'
+
+    # ответы
+    for ans in query:
+        if '|' in ans:
+            # извлекаем пару сопоставляемых значений
+            sub_text, sub_ans = ans.split(' | ')
+
+            subquestion = ET.SubElement(question, 'subquestion')
+            subquestion_text = ET.SubElement(subquestion, 'text')
+            subquestion_text.text = sub_text
+
+            subquestion_answer = ET.SubElement(subquestion, 'answer')
+            subquestion_answer_text = ET.SubElement(subquestion_answer, 'text')
+            subquestion_answer_text.text = sub_ans
+        else:
+            subquestion = ET.SubElement(question, 'subquestion')
+            subquestion_text = ET.SubElement(subquestion, 'text')
+            subquestion_answer = ET.SubElement(subquestion, 'answer')
+            subquestion_answer_text = ET.SubElement(subquestion_answer, 'text')
+            subquestion_answer_text.text = ans
+
     tree = ET.ElementTree(root)
     return tree
 

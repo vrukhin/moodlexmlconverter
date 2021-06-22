@@ -117,6 +117,14 @@ def truefalse_handler(tree, query, question_number):
     questiontext_text = ET.SubElement(questiontext, "text")
     questiontext_text.text = query_text
 
+    # id - вопроса
+    idnumber = ET.SubElement(question, 'idnumber')
+    idnumber.text = "q{}".format(question_number)
+
+    # показать стандартные инструкции 
+    showstandardinstruction = ET.SubElement(question, 'showstandardinstruction')
+    showstandardinstruction.text = '0'
+
     # ответы
     correct_answer = query.pop(0).lower()
 
@@ -217,6 +225,14 @@ def shortanswer_handler(tree, query, question_number):
     questiontext_text = ET.SubElement(questiontext, "text")
     questiontext_text.text = query_text
 
+    # id - вопроса
+    idnumber = ET.SubElement(question, 'idnumber')
+    idnumber.text = "q{}".format(question_number)
+
+    # показать стандартные инструкции 
+    showstandardinstruction = ET.SubElement(question, 'showstandardinstruction')
+    showstandardinstruction.text = '0'
+
     # ответы
     for ans in query:
         answer = ET.SubElement(question, "answer", {"fraction":"100", "format":"moodle_auto_format"})
@@ -244,6 +260,14 @@ def numerical_handler(tree, query, question_number):
     questiontext = ET.SubElement(question, "questiontext", {"format":"markdown"})
     questiontext_text = ET.SubElement(questiontext, "text")
     questiontext_text.text = query_text
+
+    # id - вопроса
+    idnumber = ET.SubElement(question, 'idnumber')
+    idnumber.text = "q{}".format(question_number)
+
+    # показать стандартные инструкции 
+    showstandardinstruction = ET.SubElement(question, 'showstandardinstruction')
+    showstandardinstruction.text = '0'
 
     # ответ
     answer = ET.SubElement(question, "answer", {"fraction":"100", "format":"moodle_auto_format"})
@@ -274,6 +298,14 @@ def essay_handler(tree, query, question_number):
     questiontext = ET.SubElement(question, "questiontext", {"format":"markdown"})
     questiontext_text = ET.SubElement(questiontext, "text")
     questiontext_text.text = query_text
+
+    # id - вопроса
+    idnumber = ET.SubElement(question, 'idnumber')
+    idnumber.text = "q{}".format(question_number)
+
+    # показать стандартные инструкции 
+    showstandardinstruction = ET.SubElement(question, 'showstandardinstruction')
+    showstandardinstruction.text = '0'
 
     # формат ответа
     responseformat = ET.SubElement(question, "responseformat")
